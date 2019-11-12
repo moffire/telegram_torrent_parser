@@ -1,9 +1,9 @@
 require './secret.rb'
 require 'telegram/bot'
+require_relative 'rutor'
 
-def rutor
-  nil
-end
+
+
 
 Telegram::Bot::Client.run(TOKEN) do |bot|
   bot.listen do |message|
@@ -12,11 +12,10 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
 
     case message.text
     when '/start'
-      bot.api.send_message(chat_id: message.chat.id, text: 'Выберите трекер для поиска:', reply_markup: buttons)
-    when 'Rutor'
-      bot.api.send_message(chat_id: message.chat.id, text: rutor)
+      bot.api.send_message(chat_id: message.chat.id, text: 'Введите что хотите найти:')
+      # bot.api.send_message(chat_id: message.chat.id, text: 'Выберите трекер для поиска:', reply_markup: buttons)
     else
-      nil
+      bot.api.send_message(chat_id: message.chat.id, text: Rutor.find(message.text))
     end
   end
 end
