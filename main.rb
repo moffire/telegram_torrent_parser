@@ -16,6 +16,7 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
       # bot.api.send_message(chat_id: message.chat.id, text: 'Выберите трекер для поиска:', reply_markup: buttons)
     else
       bot.api.send_message(chat_id: message.chat.id, text: Rutor.find(message.text))
+      # bot.api.send_message(chat_id: message.chat.id, text: 'Rutor.find(message.text)')
     end
   end
 end
