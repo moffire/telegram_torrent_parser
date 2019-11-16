@@ -2,30 +2,34 @@ require './secret.rb'
 require 'telegram/bot'
 require_relative 'rutor'
 
+search_param = ''
 
 Telegram::Bot::Client.run(TOKEN) do |bot|
   bot.listen do |message|
 
-    case message
+    buttons  = [
+        Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Rutor', callback_data: 'rutor'),
+        Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_1', callback_data: 'empty_1'),
+        Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_2', callback_data: 'empty_2')
+    ]
+    keyboard = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: buttons)
 
-    when Telegram::Bot::Types::Message
+    if message.is_a?(Telegram::Bot::Types::Message)
       case message.text
+
       when '/start'
-        buttons  = [
-            Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Rutor', callback_data: 'rutor'),
-            Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_1', callback_data: 'empty_1'),
-            Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_2', callback_data: 'empty_2')
-        ]
-        keyboard = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: buttons)
+        bot.api.send_message(chat_id: message.from.id, text: 'Введите что искать:')
+      else
+        search_param = message.text
         bot.api.send_message(chat_id: message.chat.id, text: 'Где искать:', reply_markup: keyboard)
       end
 
-    when Telegram::Bot::Types::CallbackQuery
-      bot.api.send_message(chat_id: message.from.id, text: 'Введите что искать:')
-      search_param = #??????????
+    elsif message.is_a?(Telegram::Bot::Types::CallbackQuery)
       case message.data
+
       when 'rutor'
         bot.api.send_message(chat_id: message.from.id, text: Rutor.find(search_param))
+
       end
     end
   end
