@@ -22,7 +22,7 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
 
     when Telegram::Bot::Types::CallbackQuery
       bot.api.send_message(chat_id: message.from.id, text: 'Введите что искать:')
-      search_param = bot.api.getUpdates()
+      search_param = #??????????
       case message.data
       when 'rutor'
         bot.api.send_message(chat_id: message.from.id, text: Rutor.find(search_param))
