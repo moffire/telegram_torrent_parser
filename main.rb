@@ -6,27 +6,27 @@ require_relative 'rutor'
 Telegram::Bot::Client.run(TOKEN) do |bot|
   bot.listen do |message|
 
-    #create buttons
-    buttons      = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyborad: [%w(Rutor Empty_1), %w(Empty_2 Искать_везде)], resize_keyboard: true, one_time_keyboard: true)
-    start_button = message.text
+    case message
 
-    case start_button
-    when '/start'
-      bot.api.send_message(chat_id: message.chat.id, text: 'Выберите трекер для поиска:', reply_markup: buttons)
-
-    when 'Rutor'
-      bot.api.send_message(chat_id: message.chat.id, text: 'Введите что искать:')
-
-      while true
-        bot.listen do |search_param|
-          if search_param.text == 'back'
-            status = false
-          else
-            bot.api.send_message(chat_id: message.chat.id, text: Rutor.find(search_param.text))
-          end
-        end
+    when Telegram::Bot::Types::Message
+      case message.text
+      when '/start'
+        buttons  = [
+            Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Rutor', callback_data: 'rutor'),
+            Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_1', callback_data: 'empty_1'),
+            Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_2', callback_data: 'empty_2')
+        ]
+        keyboard = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: buttons)
+        bot.api.send_message(chat_id: message.chat.id, text: 'Где искать:', reply_markup: keyboard)
       end
 
+    when Telegram::Bot::Types::CallbackQuery
+      bot.api.send_message(chat_id: message.from.id, text: 'Введите что искать:')
+      search_param = bot.api.getUpdates()
+      case message.data
+      when 'rutor'
+        bot.api.send_message(chat_id: message.from.id, text: Rutor.find(search_param))
+      end
     end
   end
 end
