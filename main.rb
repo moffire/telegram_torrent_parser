@@ -28,8 +28,14 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
       case message.data
 
       when 'rutor'
-        bot.api.send_message(chat_id: message.from.id, text: Rutor.find(search_param))
-
+        full_found_list = Rutor.find_torrents(search_param)
+        if full_found_list.nil?
+          bot.api.send_message(chat_id: message.from.id, text: 'Ничего не найдено. Попробуйте другой трекер.')
+        else
+          full_found_list.each do |splitted_answer|
+            bot.api.send_message(chat_id: message.from.id, text: splitted_answer)
+          end
+        end
       end
     end
   end
