@@ -6,8 +6,8 @@ class Rutor
   def self.find_torrents(search_word)
     full_info  = []
     link       = "http://new-rutor.org/search/#{URI.encode(search_word)}/"
-    html       = open(link)
-    doc        = Nokogiri::HTML.parse(html, encoding='utf-8')
+    html       = open(link).read
+    doc        = Nokogiri::HTML.parse(html, encoding = 'utf-8')
     table_rows = doc.css('div#index table tr')
 
     table_rows.drop(1).each do |row|

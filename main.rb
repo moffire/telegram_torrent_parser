@@ -4,6 +4,10 @@ require_relative 'rutor'
 
 search_param = ''
 
+# def create_file_from_link(string)
+#   file = Telegram::Bot::Api.getFile(string)
+# end
+
 Telegram::Bot::Client.run(TOKEN) do |bot|
   bot.listen do |message|
 
