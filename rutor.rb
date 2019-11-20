@@ -33,7 +33,7 @@ class Rutor
     if full_info.empty?
       nil
     else
-      full_info.each_slice(10).map { |element| element.map { |a, s, d| [a, s, ["#{d}\n"]] } * "\n" }
+      full_info.each_slice(10).map { |element| element.map { |a, s, d| [a, s, "[\xE2\xAC\x87 Скачать](#{d})\n"] } * "\n" }
     end
 
   end

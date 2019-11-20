@@ -5,7 +5,7 @@ require_relative 'rutor'
 search_param = ''
 
 # def create_file_from_link(string)
-#   file = Telegram::Bot::Api.getFile(string)
+#   todo
 # end
 
 Telegram::Bot::Client.run(TOKEN) do |bot|
@@ -37,10 +37,11 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
           bot.api.send_message(chat_id: message.from.id, text: 'Ничего не найдено. Попробуйте другой трекер.')
         else
           full_found_list.each do |splitted_answer|
-            bot.api.send_message(chat_id: message.from.id, text: splitted_answer)
+            bot.api.send_message(chat_id: message.from.id, text: splitted_answer, parse_mode: 'Markdown')
           end
         end
       end
+
     end
   end
 end
