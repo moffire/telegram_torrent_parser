@@ -1,6 +1,7 @@
 require_relative 'secret'
 require 'telegram/bot'
 require_relative 'rutor'
+require_relative 'rutracker'
 
 search_param = ''
 
@@ -9,7 +10,7 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
 
     buttons  = [
         Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Rutor', callback_data: 'rutor'),
-        Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_1', callback_data: 'empty_1'),
+        Telegram::Bot::Types::InlineKeyboardButton.new(text: 'RuTracker', callback_data: 'rutracker'),
         Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Empty_2', callback_data: 'empty_2')
     ]
     keyboard = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: buttons)
@@ -29,6 +30,16 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
 
       when 'rutor'
         full_found_list = Rutor.find_torrents(search_param)
+        if full_found_list.nil?
+          bot.api.send_message(chat_id: message.from.id, text: 'Ничего не найдено. Попробуйте другой трекер.')
+        else
+          full_found_list.each do |splitted_answer|
+            bot.api.send_message(chat_id: message.from.id, text: splitted_answer, parse_mode: 'Markdown')
+          end
+        end
+
+      when 'rutracker'
+        full_found_list = RuTracker.new.find_torrents('korn')
         if full_found_list.nil?
           bot.api.send_message(chat_id: message.from.id, text: 'Ничего не найдено. Попробуйте другой трекер.')
         else

@@ -20,7 +20,7 @@ class Rutor
           torrent_link = 'new-rutor.org' + row.css('td a')[0]['href']
         rescue NoMethodError
           torrent_name = row.css('td a')[0].text
-          torrent_link = "Ссылка не торрент сломана(("
+          torrent_link = "Ссылка не торрент отсутствует"
         end
 
         torrent_size = row.css('td[align="right"]')[1].text
